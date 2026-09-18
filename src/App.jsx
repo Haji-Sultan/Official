@@ -1,7 +1,7 @@
 const TELEGRAM_LINK =
   'https://telegram.me/+FAADlpwi5hFjOTQx';
 
-const PROFILE_IMAGE = 'public/logo.jpg';
+const PROFILE_IMAGE = '/logo.jpg';
 
 function trackTelegramClick() {
   if (
