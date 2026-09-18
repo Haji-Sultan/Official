@@ -16,44 +16,40 @@ function handleProfileImageError(event) {
 }
 
 
-document.addEventListener("DOMContentLoaded", function () {
+function handleTelegramClick(event) {
+  // Sirf real human click
+  if (!event.nativeEvent.isTrusted) {
+    event.preventDefault();
+    return;
+  }
 
-  const btn = document.getElementById("telegram-link");
-  if (!btn) return;
+  // Already tracked
+  if (localStorage.getItem('telegram_subscribed') === 'true') {
+    return;
+  }
 
-  btn.addEventListener("click", function (e) {
+  localStorage.setItem('telegram_subscribed', 'true');
 
-    // ✅ Sirf real human click
-    if (!e.isTrusted) {
-      e.preventDefault();
-      return;
-    }
+  const eventId = 'tg_sub_' + Date.now();
 
-    // ✅ Already tracked?
-    if (localStorage.getItem("telegram_subscribed") === "true") {
-      return;
-    }
-
-    localStorage.setItem("telegram_subscribed", "true");
-
-    const eventId = "tg_sub_" + Date.now();
-
-    if (typeof fbq !== "undefined") {
-      fbq('track', 'Subscribe', {}, { eventID: eventId });
-    }
-
-  });
-
-});
+  if (typeof window.fbq === 'function') {
+    window.fbq(
+      'track',
+      'Subscribe',
+      {},
+      { eventID: eventId }
+    );
+  }
+}
 
 function TelegramButton() {
   return (
     <a
-      id="telegram-link"
       className="btn"
       href={TELEGRAM_LINK}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleTelegramClick}
       >
       Join Free Telegram Channel
     </a>
