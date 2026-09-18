@@ -15,33 +15,46 @@ function handleProfileImageError(event) {
   event.currentTarget.src = PROFILE_PLACEHOLDER;
 }
 
-function trackTelegramClick() {
-  if (
-    typeof window !== 'undefined' &&
-    typeof window.fbq === 'function'
-  ) {
-    const eventId = `tg_sub_${Date.now()}`;
 
-    window.fbq(
-      'track',
-      'Subscribe',
-      {},
-      {
-        eventID: eventId,
-      }
-    );
-  }
-}
+document.addEventListener("DOMContentLoaded", function () {
+
+  const btn = document.getElementById("telegram-link");
+  if (!btn) return;
+
+  btn.addEventListener("click", function (e) {
+
+    // ✅ Sirf real human click
+    if (!e.isTrusted) {
+      e.preventDefault();
+      return;
+    }
+
+    // ✅ Already tracked?
+    if (localStorage.getItem("telegram_subscribed") === "true") {
+      return;
+    }
+
+    localStorage.setItem("telegram_subscribed", "true");
+
+    const eventId = "tg_sub_" + Date.now();
+
+    if (typeof fbq !== "undefined") {
+      fbq('track', 'Subscribe', {}, { eventID: eventId });
+    }
+
+  });
+
+});
 
 function TelegramButton() {
   return (
     <a
+      id="telegram-link"
       className="btn"
       href={TELEGRAM_LINK}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={trackTelegramClick}
-    >
+      >
       Join Free Telegram Channel
     </a>
   );
